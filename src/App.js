@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import Formik from './FormikEx'
-import FormikEx2 from './FormikEx2';
+import Formik from './FormikEx2'
+import FormikEx3 from './FormikEx3';
 
 function App() {
   return (
     <div >
-      <FormikEx2/>
+      <FormikEx3/>
     </div>
   );
 }
