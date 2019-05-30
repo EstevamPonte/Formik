@@ -1,12 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import jQuery from 'jquery';
 import axios from 'axios';
 
 
-
+const initialValues = {
+  texto: "",
+  nome: "",
+  periodoDeRealizacao: "",
+  cidade: "",
+  dataDoCertificado: "",
+  ano: "",
+}
 const EventoSchema = Yup.object().shape({
    texto: Yup.string().required('Obrigatorio'),
    nome: Yup.string().required('Obrigatorio'),
@@ -74,40 +80,13 @@ const FormikEx3 = ({ values, errors, touched, handleChange, isSubmitting }) => (
          }}
          validationSchema={EventoSchema}
       >
-         <Form>
-            <div className={"row"}>
-               <div className={'input-field col s12 m12'}>
-                  <label className='active' htmlFor={'texto'}>Texto inicial do certificado </label>
-                  <Field type={'text'} name="texto"
-                     placeholder="Ex: participou da ..., participou como Apresentador(a)..., foi bolsista do..." />
-                  <ErrorMessage name="texto" component="div" />
-               </div>
-               <div className={'input-field col s12 m12'}>
-                  <label className='active' htmlFor={'nome'}>Nome do Evento</label>
-                  <Field type={'text'} name="nome" placeholder="Ex: Semana Acadêmica" />
-                  <ErrorMessage name="nome" component="div" />
-               </div>
-               <div className={'input-field col s12 m12'}>
-                  <label className='active' htmlFor={'periodoDeRealizacao'}>Periodo de Realização</label>
-                  <Field type={'text'} name="periodoDeRealizacao"
-                     placeholder="Ex: no período de ..., no de ..., realizado no dia ..." />
-                  <ErrorMessage name="periodoDeRealizacao" component="div" />
-               </div>
-               <div className={'input-field col s12 m12'}>
-                  <label className='active' htmlFor={'cidade'}>Cidade</label>
-                  <Field type={'text'} name="cidade" placeholder="Ex: Fortaleza" />
-                  <ErrorMessage name="cidade" component="div" />
-               </div>
-               <div className={'input-field col s6 m6'}>
-                  <label className='active' htmlFor={'dataDoCertificado'}>Data do Certificado</label>
-                  <Field type={'text'} name="dataDoCertificado" placeholder="Ex: 28 de maio de 2017" />
-                  <ErrorMessage name="dataDoCertificado" component="div" />
-               </div>
-               <div className={'input-field col s6 m6'}>
-                  <label className='active' htmlFor={'ano'}>Ano do Evento</label>
-                  <Field type={'text'} name="ano" placeholder="Ex: 2018" />
-                  <ErrorMessage name="ano" component="div" />
-               </div>
+        <Form>
+          <div className={"row"}>
+            <div className={'input-field col s12 m12'}>
+              <label className='active' htmlFor={'texto'}>Texto inicial do certificado </label>
+              <Field type={'text'} name="texto"
+                placeholder="Ex: participou da ..., participou como Apresentador(a)..., foi bolsista do..." />
+              <ErrorMessage name="texto" component="div" />
             </div>
             <div className="row">
                <select defaultValue="" name="curso" onChange={handleChange}>
@@ -121,12 +100,14 @@ const FormikEx3 = ({ values, errors, touched, handleChange, isSubmitting }) => (
                </select>
                
             </div>
+            </div>
             <button type="submit" disabled={isSubmitting}>Invite</button>
          </Form>
       </Formik>
-   </div>
-);
+    </div>
+  );
 
 
 
-export default FormikEx3;
+
+export default EventForm;
