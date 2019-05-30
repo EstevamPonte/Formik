@@ -12,7 +12,7 @@ export default class FormikEx4 extends Component {
    componentDidMount() {
       this.searchCursos()
 
-      
+
    }
    searchCursos() {
       jQuery.ajax({
@@ -28,8 +28,10 @@ export default class FormikEx4 extends Component {
          }
       })
    }
-   myForm(props){
+   myForm(props) {
       let listCursos = this.state.curso;
+
+      const { values, errors, touched, handleChange, isSubmitting } = props
       const initialValues = {
          texto: "",
          nome: "",
@@ -37,6 +39,7 @@ export default class FormikEx4 extends Component {
          cidade: "",
          dataDoCertificado: "",
          ano: "",
+         curso: ""
       }
       const EventoSchema = Yup.object().shape({
          texto: Yup.string().required('Obrigatorio'),
@@ -45,12 +48,18 @@ export default class FormikEx4 extends Component {
          cidade: Yup.string().required('Obrigatorio'),
          dataDoCertificado: Yup.string().required('Obrigatorio'),
          ano: Yup.string().required('Obrigatorio'),
+         curso: Yup.string()
       })
       return (
          <div>
             <Formik
                initialValues={initialValues}
                validationSchema={EventoSchema}
+               onSubmit={values => {
+                  setTimeout(() => {
+                     alert(JSON.stringify(values, null, 2))
+                  }, 500)
+               }}
             >
                <Form>
                   <div className={"row"}>
@@ -88,18 +97,16 @@ export default class FormikEx4 extends Component {
                      </div>
                   </div>
                   <div className="row">
-                     <select defaultValue="">
-                        <option value="" disabled>Cursos</option>
-                        {
-                           
-                           listCursos.map(curso => 
-                              <option key ={curso.id}>{curso.nome}</option>
-                           )
-                           
+                     <Field component="select" name="curso">
+                        <option value='' selected disabled>Cursos</option>
+                        {listCursos.map(curso =>
+                           <option key={curso.id} value={curso.nome}>{curso.nome}</option>
+                        )
                         }
-                     </select>
+                     </Field>
 
                   </div>
+                  <button type="submit" disabled={isSubmitting}>Invite</button>
                </Form>
             </Formik>
          </div>
