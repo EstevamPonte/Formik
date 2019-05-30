@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import jQuery from 'jquery';
+import axios from 'axios';
+
 
 
 const EventoSchema = Yup.object().shape({
@@ -12,6 +14,8 @@ const EventoSchema = Yup.object().shape({
    cidade: Yup.string().required('Obrigatorio'),
    dataDoCertificado: Yup.string().required('Obrigatorio'),
    ano: Yup.string().required('Obrigatorio'),
+   curso: Yup.string().required('Obrigatorio')
+
 })
 
 // const searchCursos = () => {
@@ -20,6 +24,10 @@ const EventoSchema = Yup.object().shape({
 //       url: "http://localhost:8081/" + 'api/listCursos/',
 //       success: (cursos) => {
 //          listarCursos = cursos
+
+//          console.log(listarCursos)
+//          return listarCursos
+
 //       },
 //       statusCode: {
 //          500: function () {
@@ -28,10 +36,26 @@ const EventoSchema = Yup.object().shape({
 //       }
 //    })
 // }
-let listarCursos = ["SI","DI","AD"];
-console.log(listarCursos[0])
+let listarCursos = []
 
-const FormikEx3 = ({ values, errors, touched }) => (
+const getCurso = () => {
+   axios.get("http://localhost:8081/" + 'api/listCursos/')
+      .then(function (resp) {
+         listarCursos= resp.data
+         console.log(listarCursos)
+      })
+      .catch(function (error) {
+         console.log(error);
+      })
+}
+getCurso()
+console.log(listarCursos)
+
+
+
+
+
+const FormikEx3 = ({ values, errors, touched, handleChange, isSubmitting }) => (
    <div>
      <Formik
          initialValues={{
@@ -41,6 +65,12 @@ const FormikEx3 = ({ values, errors, touched }) => (
             cidade: "",
             dataDoCertificado: "",
             ano: "",
+            curso: "",
+         }}
+         onSubmit={values => {
+            setTimeout(() => {
+               alert(JSON.stringify(values, null, 2))
+            }, 500)
          }}
          validationSchema={EventoSchema}
       >
@@ -80,15 +110,18 @@ const FormikEx3 = ({ values, errors, touched }) => (
                </div>
             </div>
             <div className="row">
-               <Field component="select">
-                  {listarCursos.map(curso => 
-                     <option>{curso}</option>   
-                     
-                  )}
-
-               </Field>
+               <select defaultValue="" name="curso" onChange={handleChange}>
+                  <option value="" disabled >Curso</option>
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  {/* {listarCursos.map((curso, index) => 
+                     <option key={index}  value={curso}>{curso}</option>   
+                     )} */}
+               </select>
                
             </div>
+            <button type="submit" disabled={isSubmitting}>Invite</button>
          </Form>
       </Formik>
    </div>
