@@ -6,13 +6,13 @@ export default class FormikEx4 extends Component {
    constructor(props) {
       super(props)
       this.state = {
-         curso: []
+         curso: [],
+         chancelas: []
       }
    }
    componentDidMount() {
       this.searchCursos()
-
-
+      this.searchChancelas()
    }
    searchCursos() {
       jQuery.ajax({
@@ -28,8 +28,24 @@ export default class FormikEx4 extends Component {
          }
       })
    }
+
+   searchChancelas() {
+      jQuery.ajax({
+         method: 'GET',
+         url: "http://localhost:8081/api/listChancelas/",
+         success: (chancelas) => {
+            this.setState({ chancelas })
+         },
+         statusCode: {
+            500: function () {
+               alert(":(");
+            }
+         }
+      })
+   }
    myForm(props) {
       let listCursos = this.state.curso;
+      let listChancelas= this.state.chancelas;
 
       const { values, errors, touched, handleChange, isSubmitting } = props
       const initialValues = {
@@ -39,16 +55,18 @@ export default class FormikEx4 extends Component {
          cidade: "",
          dataDoCertificado: "",
          ano: "",
-         curso: ""
+         curso: "",
+         chancela:"",
       }
       const EventoSchema = Yup.object().shape({
          texto: Yup.string().required('Obrigatorio'),
          nome: Yup.string().required('Obrigatorio'),
          periodoDeRealizacao: Yup.string().required('Obrigatorio'),
          cidade: Yup.string().required('Obrigatorio'),
-         dataDoCertificado: Yup.string().required('Obrigatorio'),
+         dataDoCertificado: Yup.string("Use uma data valida Ex: 01/01/2001").required('Obrigatorio'),
          ano: Yup.string().required('Obrigatorio'),
-         curso: Yup.string()
+         curso: Yup.string().required('Obrigatorio'),
+         chancela: Yup.string().required('Obrigatorio')
       })
       return (
          <div>
@@ -100,10 +118,17 @@ export default class FormikEx4 extends Component {
                      <Field component="select" name="curso">
                         <option value='' defaultValue disabled>Cursos</option>
                         {listCursos.map(curso =>
-                           <option key={curso.id} value={curso.nome}>{curso.nome}</option>
-                        )
+                           <option key={curso.id} value={curso.nome}>{curso.nome}</option>)
                         }
                      </Field>
+                     <ErrorMessage name="curso" component="div" />
+                     <Field component="select" name="chancela">
+                        <option value='' defaultValue disabled>Chancela</option>
+                        {listChancelas.map(chancela =>
+                           <option key={chancela.id} value={chancela.nome}>{chancela.nome}</option>)
+                        }
+                     </Field>
+                     <ErrorMessage name="chancela" component="div" />
                   </div>
                   <button type="submit" disabled={isSubmitting}>Invite</button>
                </Form>
