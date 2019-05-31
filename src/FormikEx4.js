@@ -98,13 +98,12 @@ export default class FormikEx4 extends Component {
                   </div>
                   <div className="row">
                      <Field component="select" name="curso">
-                        <option value='' selected disabled>Cursos</option>
+                        <option value='' defaultValue disabled>Cursos</option>
                         {listCursos.map(curso =>
                            <option key={curso.id} value={curso.nome}>{curso.nome}</option>
                         )
                         }
                      </Field>
-
                   </div>
                   <button type="submit" disabled={isSubmitting}>Invite</button>
                </Form>
