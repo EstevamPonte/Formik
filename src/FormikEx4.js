@@ -2,18 +2,30 @@ import React, { Component } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import jQuery from 'jquery';
+import * as Config from './Config'
+import axios from 'axios'
+
 export default class FormikEx4 extends Component {
    constructor(props) {
       super(props)
       this.state = {
          curso: [],
-         chancelas: []
+         chancelas: [],
+         cidade: "",
+         nome: "",
+         periodoDeRealizacao: "",
+         texto: "",
+         dataDoCertificado: "",
+         ano: ""
       }
    }
+
    componentDidMount() {
+      
       this.searchCursos()
       this.searchChancelas()
    }
+
    searchCursos() {
       jQuery.ajax({
          method: 'GET',
@@ -27,6 +39,38 @@ export default class FormikEx4 extends Component {
             }
          }
       })
+   }
+
+   getEvent(id) {
+      jQuery.ajax({
+         method: 'GET',
+         url: Config.URL + 'api/getEventoById/?eventoId=' + id,
+         success: (event) => {
+            this.setState({
+               nome: event.nome,
+               cidade: event.cidade,
+               periodoDeRealizacao: event.periodoDeRealizacao,
+               texto: event.texto,
+               dataDoCertificado: event.dataDoCertificado,
+               ano: event.ano
+            })
+         },
+         statusCode: {
+            500: function () {
+               alert(":(");
+            }
+         }
+      }
+      )
+   }
+
+   postEvent(evento) {
+      console.log(`2 - ${evento}`)
+      axios.post(Config.URL_API + 'v1/evento/', evento)
+         .then(resp => console.log("oii"))
+         .catch(function (error) {
+            console.log(error);
+         })
    }
 
    searchChancelas() {
@@ -45,18 +89,21 @@ export default class FormikEx4 extends Component {
    }
    myForm(props) {
       let listCursos = this.state.curso;
-      let listChancelas= this.state.chancelas;
+      let listChancelas = this.state.chancelas;
+      const { nome, cidade, periodoDeRealizacao, texto, dataDoCertificado, ano } = this.state
 
       const { values, errors, touched, handleChange, isSubmitting } = props
       const initialValues = {
-         texto: "",
-         nome: "",
-         periodoDeRealizacao: "",
-         cidade: "",
-         dataDoCertificado: "",
-         ano: "",
+         texto: texto === "" ? "" : texto,
+         nome: nome === "" ? "" : nome,
+         periodoDeRealizacao: periodoDeRealizacao === "" ? "" : periodoDeRealizacao,
+         cidade: cidade === "" ? "" : cidade,
+         dataDoCertificado: dataDoCertificado === "" ? "" : dataDoCertificado,
+         ano: ano === "" ? "" : ano,
          curso: "",
-         chancela:"",
+         chancelas: "",
+         atividades: null,
+         descricao: "null",
       }
       const EventoSchema = Yup.object().shape({
          texto: Yup.string().required('Obrigatorio'),
@@ -66,7 +113,7 @@ export default class FormikEx4 extends Component {
          dataDoCertificado: Yup.string("Use uma data valida Ex: 01/01/2001").required('Obrigatorio'),
          ano: Yup.string().required('Obrigatorio'),
          curso: Yup.string().required('Obrigatorio'),
-         chancela: Yup.string().required('Obrigatorio')
+         chancelas: Yup.string().required('Obrigatorio')
       })
       return (
          <div>
@@ -74,9 +121,8 @@ export default class FormikEx4 extends Component {
                initialValues={initialValues}
                validationSchema={EventoSchema}
                onSubmit={values => {
-                  setTimeout(() => {
-                     alert(JSON.stringify(values, null, 2))
-                  }, 500)
+                  console.log(JSON.stringify(values, null, 2))
+                  this.postEvent(values)
                }}
             >
                <Form>
@@ -118,17 +164,17 @@ export default class FormikEx4 extends Component {
                      <Field component="select" name="curso">
                         <option value='' defaultValue disabled>Cursos</option>
                         {listCursos.map(curso =>
-                           <option key={curso.id} value={curso.nome}>{curso.nome}</option>)
+                           <option key={curso.id} value={curso.id}>{curso.nome}</option>)
                         }
                      </Field>
                      <ErrorMessage name="curso" component="div" />
-                     <Field component="select" name="chancela">
+                     <Field component="select" name="chancelas">
                         <option value='' defaultValue disabled>Chancela</option>
                         {listChancelas.map(chancela =>
-                           <option key={chancela.id} value={chancela.nome}>{chancela.nome}</option>)
+                           <option key={chancela.id} value={chancela.id}>{chancela.nome}</option>)
                         }
                      </Field>
-                     <ErrorMessage name="chancela" component="div" />
+                     <ErrorMessage name="chancelas" component="div" />
                   </div>
                   <button type="submit" disabled={isSubmitting}>Invite</button>
                </Form>
