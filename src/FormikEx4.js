@@ -101,6 +101,11 @@ class MainForm extends Component {
                     <ErrorMessage name="chancela" component="div" />
                 </div>
                 <button type="submit" disabled={isSubmitting}>Invite</button>
+                <div>
+                    <p>
+                        {`values: ${values.nome}`}
+                    </p>
+                </div>
             </Form>
         );
     }
