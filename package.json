@@ -7,6 +7,7 @@
     "formik": "^1.5.7",
     "jquery": "^3.4.1",
     "react": "^16.8.6",
+    "react-day-picker": "^7.3.2",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "yup": "^0.27.0"
