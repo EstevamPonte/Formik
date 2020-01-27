@@ -6,7 +6,10 @@ export default function Example() {
   return (
     <div>
       <p>Please type a day:</p>
-      <DayPickerInput dayPickerProps={{ disabledDays: {before: new Date()} }} onDayChange={day => console.log(day)} />
+      <DayPickerInput
+        dayPickerProps={{ disabledDays: {before: new Date()} }}
+        onDayChange={day => console.log(day)}
+      />
     </div>
   );
 }
